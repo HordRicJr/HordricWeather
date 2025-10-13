@@ -1,48 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/date_symbol_data_local.dart';
+import 'package:provider/provider.dart';
+import 'core/theme/theme_provider.dart';
+import 'features/home/pages/home_page.dart';
 
-import 'core/config/app_initializer.dart';
-import 'core/theme/app_theme.dart';
-import 'shared/services/background_service.dart';
-import 'shared/services/daily_advice_service.dart';
-import 'shared/services/notification_service.dart';
-import 'shared/services/user_service.dart';
-import 'shared/services/weather_widget_service.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialiser les locales pour les dates
-  await initializeDateFormatting('fr_FR', null);
-
-  // Initialiser les notifications
-  await NotificationService.initialize();
-
-  // Initialiser le service utilisateur
-  await UserService.initialize();
-
-  // Initialiser les services en arrière-plan
-  await BackgroundWeatherService.initialize();
-
-  // Initialiser le widget
-  await WeatherWidgetService.initializeWidget();
-
-  // Initialiser le service de conseils quotidiens
-  await DailyAdviceService.initialize();
-
-  // Démarrer l'affichage météo sur l'écran de verrouillage
-  BackgroundWeatherService.startLockScreenNotifications();
-
-  // Configuration de la barre de statut
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
+void main() {
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: const MyApp(),
     ),
   );
-
-  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -50,11 +17,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return MaterialApp(
       title: 'HordricWeather',
-      theme: AppTheme.lightTheme,
-      home: const AppInitializer(),
-      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorSchemeSeed: themeProvider.primaryColor,
+        useMaterial3: true,
+      ),
+      home: const Home(),
     );
   }
 }
