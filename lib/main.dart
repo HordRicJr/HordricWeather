@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'core/theme/app_theme.dart';
 import 'core/theme/theme_provider.dart';
 import 'features/home/pages/home_page.dart';
 
@@ -20,11 +21,9 @@ class MyApp extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'HordricWeather',
-      theme: ThemeData(
-        colorSchemeSeed: themeProvider.primaryColor,
-        useMaterial3: true,
-      ),
+      theme: AppTheme.buildTheme(themeProvider.primaryColor),
       home: const Home(),
     );
   }
