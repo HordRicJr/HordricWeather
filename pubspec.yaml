@@ -8,6 +8,11 @@ environment:
   sdk: '>=3.4.4 <4.0.0'
 
 dependencies:
+  provider: ^6.1.2
+  shared_preferences: ^2.3.3
+  flex_color_picker: ^3.4.1
+
+
   dotenv: ^4.2.0
   flutter:
     sdk: flutter
