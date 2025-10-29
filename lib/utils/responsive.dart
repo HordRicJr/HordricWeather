@@ -11,26 +11,29 @@ class Responsive {
     return ScreenSize.desktop;
   }
 
-  static bool isMobile(BuildContext ctx) => getSize(ctx) == ScreenSize.mobile;
-  static bool isTabletPortrait(BuildContext ctx) => getSize(ctx) == ScreenSize.tabletPortrait;
-  static bool isTabletLandscape(BuildContext ctx) => getSize(ctx) == ScreenSize.tabletLandscape;
-  static bool isDesktop(BuildContext ctx) => getSize(ctx) == ScreenSize.desktop;
-
   static double horizontalPadding(BuildContext ctx) {
     switch (getSize(ctx)) {
-      case ScreenSize.mobile: return 12.0;
-      case ScreenSize.tabletPortrait: return 18.0;
-      case ScreenSize.tabletLandscape: return 24.0;
-      case ScreenSize.desktop: return 32.0;
+      case ScreenSize.mobile:
+        return 12.0;
+      case ScreenSize.tabletPortrait:
+        return 18.0;
+      case ScreenSize.tabletLandscape:
+        return 24.0;
+      case ScreenSize.desktop:
+        return 32.0;
     }
   }
 
   static int columnsForWeatherCards(BuildContext ctx) {
     switch (getSize(ctx)) {
-      case ScreenSize.mobile: return 1;
-      case ScreenSize.tabletPortrait: return 2;
-      case ScreenSize.tabletLandscape: return 3;
-      case ScreenSize.desktop: return 4;
+      case ScreenSize.mobile:
+        return 1;
+      case ScreenSize.tabletPortrait:
+        return 2;
+      case ScreenSize.tabletLandscape:
+        return 3;
+      case ScreenSize.desktop:
+        return 4;
     }
   }
 }
