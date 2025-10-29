@@ -20,6 +20,7 @@
 
 HordricWeather is a modern and elegant weather app built with Flutter, providing accurate forecasts, intelligent alerts, air quality monitoring, and a customizable widget. Completely free, ad-free, and respectful of your privacy.
 
+
 ---
 
 ## 📱 Download
