@@ -5,7 +5,9 @@ import 'core/theme/theme_provider.dart';
 import 'features/home/pages/home_page.dart';
 
 // Responsive helper - make sure you created lib/utils/responsive.dart
-import 'utils/responsive.dart';
+// Responsive helper - make sure you created lib/utils/responsive.dart
+import 'package:hordricweather/utils/responsive.dart';
+
 
 void main() {
   runApp(
