@@ -8,11 +8,12 @@ environment:
   sdk: '>=3.4.4 <4.0.0'
 
 dependencies:
-  dotenv: ^4.2.0
   flutter:
     sdk: flutter
-
   cupertino_icons: ^1.0.6
+  provider: ^6.1.2
+  shared_preferences: ^2.3.3
+  flex_color_picker: ^3.4.1
   http: ^1.2.2
   intl: ^0.20.1
   flutter_local_notifications: ^19.4.2
@@ -23,7 +24,6 @@ dependencies:
   lottie: ^3.3.2
   timezone: ^0.10.1
   home_widget: ^0.8.0
-  shared_preferences: ^2.3.2
   url_launcher: ^6.3.1
   fl_chart: ^1.1.1
 
@@ -32,7 +32,6 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.14.2
-
 
 flutter_launcher_icons:
   android: true
@@ -43,6 +42,9 @@ flutter_launcher_icons:
   adaptive_icon_foreground: "assets/img.png"
 
 flutter:
+dependency_overrides:
+  flutter_lints: ^4.0.0
+
   uses-material-design: true
 
   assets:

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:hordricweather/features/home/pages/home_page.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/theme/theme_provider.dart'; // ThemeProvider import
 import '../../../shared/services/weather_widget_service.dart';
 import '../../../shared/services/background_service.dart';
 import 'privacy_policy_page.dart';
-import 'package:hordricweather/widgets/custom_snackbar.dart'; // ✅ Added import
+import 'package:hordricweather/widgets/custom_snackbar.dart';
+import 'home_page.dart';
+import 'theme_selector_page.dart'; // Theme selector page import
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -56,6 +59,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.transparent,
@@ -163,6 +168,21 @@ class _SettingsPageState extends State<SettingsPage> {
                         },
                       ),
                       const SizedBox(height: AppTheme.spacing3XL),
+                      _buildSectionTitle('🎨 Thème'),
+                      _buildActionButton(
+                        icon: Icons.color_lens_outlined,
+                        title: 'Personnaliser le thème',
+                        subtitle: 'Choisissez la couleur principale de l\'app',
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ThemeSelectorPage(),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: AppTheme.spacing3XL),
                       _buildSectionTitle('ℹ️ Informations'),
                       _buildActionButton(
                         icon: Icons.privacy_tip_outlined,
@@ -204,7 +224,6 @@ class _SettingsPageState extends State<SettingsPage> {
                         subtitle: 'Actualiser manuellement',
                         onTap: () async {
                           await WeatherWidgetService.updateWidget();
-                          // ✅ Replaced old SnackBar with custom floating SnackBar
                           showCustomSnackBar(
                             context,
                             'Widget mis à jour!',
@@ -264,7 +283,6 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  // ✅ Updated reset dialog to use floating SnackBar
   Future<void> _showResetDialog() async {
     return showDialog(
       context: context,
@@ -304,7 +322,6 @@ class _SettingsPageState extends State<SettingsPage> {
               await prefs.clear();
               if (context.mounted) {
                 Navigator.pop(context);
-                // ✅ New floating custom SnackBar
                 showCustomSnackBar(
                   context,
                   'Données réinitialisées avec succès',
@@ -355,5 +372,53 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  // (rest of the file unchanged)
+  // Helper Widgets
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppTheme.spacingM),
+      child: Text(
+        title,
+        style: const TextStyle(
+            color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  Widget _buildSettingCard({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required bool value,
+    required Function(bool)? onChanged,
+  }) {
+    return Card(
+      color: AppTheme.cardBackground,
+      margin: const EdgeInsets.symmetric(vertical: AppTheme.spacingM),
+      child: SwitchListTile(
+        secondary: Icon(icon, color: AppTheme.textOnPrimary),
+        title: Text(title, style: const TextStyle(color: AppTheme.textOnPrimary)),
+        subtitle: Text(subtitle, style: const TextStyle(color: Colors.white70)),
+        value: value,
+        onChanged: onChanged,
+      ),
+    );
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return Card(
+      color: AppTheme.cardBackground,
+      margin: const EdgeInsets.symmetric(vertical: AppTheme.spacingM),
+      child: ListTile(
+        leading: Icon(icon, color: AppTheme.textOnPrimary),
+        title: Text(title, style: const TextStyle(color: AppTheme.textOnPrimary)),
+        subtitle: Text(subtitle, style: const TextStyle(color: Colors.white70)),
+        onTap: onTap,
+      ),
+    );
+  }
 }

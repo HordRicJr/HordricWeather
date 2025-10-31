@@ -1,48 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/date_symbol_data_local.dart';
-
-import 'core/config/app_initializer.dart';
+import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
-import 'shared/services/background_service.dart';
-import 'shared/services/daily_advice_service.dart';
-import 'shared/services/notification_service.dart';
-import 'shared/services/user_service.dart';
-import 'shared/services/weather_widget_service.dart';
+import 'core/theme/theme_provider.dart';
+import 'features/home/pages/home_page.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+// Responsive helper - make sure you created lib/utils/responsive.dart
+// Responsive helper - make sure you created lib/utils/responsive.dart
+import 'package:hordricweather/utils/responsive.dart';
 
-  // Initialiser les locales pour les dates
-  await initializeDateFormatting('fr_FR', null);
 
-  // Initialiser les notifications
-  await NotificationService.initialize();
-
-  // Initialiser le service utilisateur
-  await UserService.initialize();
-
-  // Initialiser les services en arrière-plan
-  await BackgroundWeatherService.initialize();
-
-  // Initialiser le widget
-  await WeatherWidgetService.initializeWidget();
-
-  // Initialiser le service de conseils quotidiens
-  await DailyAdviceService.initialize();
-
-  // Démarrer l'affichage météo sur l'écran de verrouillage
-  BackgroundWeatherService.startLockScreenNotifications();
-
-  // Configuration de la barre de statut
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
+void main() {
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: const MyApp(),
     ),
   );
-
-  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -50,11 +23,38 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return MaterialApp(
-      title: 'HordricWeather',
-      theme: AppTheme.lightTheme,
-      home: const AppInitializer(),
       debugShowCheckedModeBanner: false,
+      title: 'HordricWeather',
+      theme: AppTheme.buildTheme(themeProvider.primaryColor),
+      builder: (context, child) {
+        // Apply small responsive adjustments at the app root:
+        // scale text slightly on larger breakpoints so tablet looks better.
+        final screenSize = Responsive.getSize(context);
+        double textScale = 1.0;
+        switch (screenSize) {
+          case ScreenSize.mobile:
+            textScale = 1.0;
+            break;
+          case ScreenSize.tabletPortrait:
+            textScale = 1.05;
+            break;
+          case ScreenSize.tabletLandscape:
+            textScale = 1.12;
+            break;
+          case ScreenSize.desktop:
+            textScale = 1.18;
+            break;
+        }
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaleFactor: textScale),
+          child: child ?? const SizedBox.shrink(),
+        );
+      },
+      // Keep using your existing Home widget.
+      home: const Home(),
     );
   }
 }
